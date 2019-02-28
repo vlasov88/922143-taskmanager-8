@@ -1,4 +1,4 @@
-import {COLORS, DAYS} from './common';
+import {COLORS, DAYS} from './constants';
 
 /**
  * Получить элемент дня для карточки задач

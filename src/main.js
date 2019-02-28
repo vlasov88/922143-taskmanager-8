@@ -1,7 +1,7 @@
 import makeFilter from './make-filter';
 import makeTask from './make-task';
 import Card from './card';
-import {COLORS, DAYS} from './common';
+import {COLORS, DAYS} from './constants';
 
 /** Контейнер для фильтров */
 const filterContainer = document.querySelector(`.main__filter`);

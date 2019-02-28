@@ -1,4 +1,4 @@
-import {COLORS} from './common';
+import {COLORS} from './constants';
 
 /**
  * Карточка с задачей
@@ -9,7 +9,14 @@ import {COLORS} from './common';
  * @param {boolean} isDeadline признак того что задача просрочена
  * @param {boolean} isEdit     признак редактирования
  */
-export default function Card(text = ``, color = COLORS[0], days = new Set(), hashtags = [], isDeadline = false) {
+export default function Card(
+    {
+      text = ``,
+      color = COLORS[0],
+      days = new Set(),
+      hashtags = [],
+      isDeadline = false
+    } = {}) {
   this.id = Card.index++;
   this.text = text;
   this.color = color;
