@@ -13,20 +13,21 @@ import {Color} from './constants';
  */
 export default function Card({
   title = ``,
-  dueDate ,
-  tags,
+  dueDate,
+  tags = ``,
   picture,
   color = Color.BLACK,
   repeatingDays = new Set(),
   isFavorite = false,
   isDone = false
 } = {}) {
-  this.title = title,
-  this.dueDate = dueDate,
-  this.tags = tags,
-  this.picture = picture,
-  this.color = color,
-  this.repeatingDays = repeatingDays,
-  this.isFavorite = isFavorite,
-  this.isDone = isDone
+  this.title = title;
+  this.dueDate = dueDate;
+  this.tags = tags;
+  this.picture = picture;
+  this.color = color;
+  this.repeatingDays = repeatingDays;
+  this.isFavorite = isFavorite;
+  this.isDone = isDone;
 }
+

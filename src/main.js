@@ -1,6 +1,5 @@
 import makeFilter from './make-filter';
 import makeTask from './make-task';
-import Card from './card';
 import {getCard} from './mock';
 import {rand} from './utils';
 
@@ -22,7 +21,7 @@ const addFilter = (caption, amount, isChecked = false) => {
 
 /**
  * Добавить задачи
- * @param {Card} card[] список карточек задач
+ * @param {Card[]} cards список карточек задач
  */
 const addTasks = (cards) => {
   cardsContainer.insertAdjacentHTML(`beforeend`, cards.reduce((acc, cur) => acc + makeTask(cur), ``));
@@ -34,7 +33,7 @@ const addTasks = (cards) => {
 const filterHandler = () => {
   cardsContainer.innerHTML = ``;
   const count = rand(1, 8);
-  addTasks(Array.apply(null, Array(count)).map(() => getCard()));
+  addTasks([...Array(count)].map(() => getCard()));
 };
 
 filterContainer.addEventListener(`change`, filterHandler);
@@ -46,5 +45,5 @@ addFilter(`Repeating`, 2);
 addFilter(`Tags`, 6);
 addFilter(`ARCHIVE`, 115);
 
-addTasks(Array.apply(null, Array(7)).map(() => getCard()));
+addTasks([...Array(7)].map(() => getCard()));
 

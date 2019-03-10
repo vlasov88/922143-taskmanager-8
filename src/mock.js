@@ -20,6 +20,7 @@ const daysList = Object.values(Day);
 
 /**
  * Получить карточку с задачей
+ * @return {Card} карточка с задачей
  */
 export const getCard = () => {
   const repeatingDays = new Set();
@@ -31,7 +32,7 @@ export const getCard = () => {
   return new Card({
     title: titles[rand(0, titles.length - 1)],
     dueDate: moment().add(rand(0, 14) - 7, `d`),
-    tags: Array.apply(null, Array(rand(0, 3)))
+    tags: [...Array(rand(0, 3))]
       .map(() => hashtags[rand(0, hashtags.length - 1)]),
     picture: `${picUrl}${Math.random()}`,
     color: colors[rand(0, colors.length - 1)],
