@@ -1,26 +1,32 @@
-import {COLORS} from './constants';
+import {Color} from './constants';
 
 /**
  * Карточка с задачей
- * @param {string} text        текст карточки
+ * @param {string} title       заголовок карточки
+ * @param {Date} dueDate       дата запланированного выполнения
+ * @param {Set} tags           список хэштегов
+ * @param {string} picture     URL до картинки
  * @param {string} color       цвет полоски
- * @param {Set} days           дни для повторения
- * @param {Array} hashtags     хэштеги
- * @param {boolean} isDeadline признак того что задача просрочена
- * @param {boolean} isEdit     признак редактирования
+ * @param {Set} repeatingDays  дни для повторения
+ * @param {boolean} isFavorite добавлена ли задача в избранное.
+ * @param {boolean} isDone     выполнена ли задача.
  */
 export default function Card({
-  text = ``,
-  color = COLORS[0],
-  days = new Set(),
-  hashtags = [],
-  isDeadline = false
+  title = ``,
+  dueDate ,
+  tags,
+  picture,
+  color = Color.BLACK,
+  repeatingDays = new Set(),
+  isFavorite = false,
+  isDone = false
 } = {}) {
-  this.id = Card.index++;
-  this.text = text;
-  this.color = color;
-  this.days = days;
-  this.hashtags = hashtags;
-  this.isDeadline = isDeadline;
+  this.title = title,
+  this.dueDate = dueDate,
+  this.tags = tags,
+  this.picture = picture,
+  this.color = color,
+  this.repeatingDays = repeatingDays,
+  this.isFavorite = isFavorite,
+  this.isDone = isDone
 }
-Card.index = 1;

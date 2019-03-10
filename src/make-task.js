@@ -1,4 +1,7 @@
-import {COLORS, DAYS} from './constants';
+import {Color, Day} from './constants';
+import moment from 'moment';
+
+let cardIndex = 0;
 
 /**
  * Получить элемент дня для карточки задач
@@ -56,15 +59,15 @@ const getTaskCardHashtagElement = (hashtag) =>
  * @return {string} элемент задачи
  */
 export default (card) => {
-  const colorsList = COLORS.reduce((acc, curr) => acc + getTaskCardColorElement(curr, card.id, curr === card.color), ``);
-  const daysList = DAYS.reduce((acc, curr) => acc + getTaskCardDayElement(curr, card.id, card.days.has(curr)), ``);
-  const hashtagList = card.hashtags.reduce((acc, curr) => acc + getTaskCardHashtagElement(curr), ``);
-  const isRepeat = card.days.size > 0;
-  const isEdit = false; // TODO на будующее
-  // const deadline; // TODO работа с датами и временем
+  const id = cardIndex++;
+  const colorsList = Object.values(Color).reduce((acc, curr) => acc + getTaskCardColorElement(curr, id, curr === card.color), ``);
+  const daysList = Object.values(Day).reduce((acc, curr) => acc + getTaskCardDayElement(curr, id, card.repeatingDays.has(curr)), ``);
+  const hashtagList = card.tags.reduce((acc, curr) => acc + getTaskCardHashtagElement(curr), ``);
+  const isRepeat = card.repeatingDays.size > 0;
+  const isDeadline = card.dueDate && card.dueDate.isBefore(moment());
 
   return `
-  <article class="card${isEdit ? `  card--edit` : ``} card--${card.color}${card.isRepeat ? ` card--repeat` : ``}${card.isDeadline ? ` card--deadline` : ``}">
+  <article class="card card--${card.color}${card.isRepeat ? ` card--repeat` : ``}${isDeadline ? ` card--deadline` : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -85,7 +88,7 @@ export default (card) => {
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >${card.text}</textarea>
+            >${card.title}</textarea>
           </label>
         </div>
 
@@ -140,14 +143,14 @@ export default (card) => {
             </div>
           </div>
 
-          <label class="card__img-wrap card__img-wrap--empty">
+          <label class="card__img-wrap${card.picture ? `` : ` card__img-wrap--empty`}">
             <input
               type="file"
               class="card__img-input visually-hidden"
               name="img"
             />
             <img
-              src="img/add-photo.svg"
+              src="${card.picture || `img/add-photo.svg`}"
               alt="task picture"
               class="card__img"
             />

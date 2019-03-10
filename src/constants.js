@@ -1,5 +1,23 @@
-/** Список дней для карточек задач */
-export const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
+/**
+ * День для карточек задач
+ */
+export const Day = {
+  MO: `mo`,
+  TU: `tu`,
+  WE: `we`,
+  TH: `th`,
+  FR: `fr`,
+  SA: `sa`,
+  SU: `su`
+};
 
-/** Список цветов для карточек задач */
-export const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+/**
+ * Цвет для карточек задач
+ */
+export const Color = {
+  BLACK: `black`,
+  YELLOW: `yellow`,
+  BLUE: `blue`,
+  GREEN: `green`,
+  PINK: `pink`
+};

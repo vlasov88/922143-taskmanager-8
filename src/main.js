@@ -1,7 +1,8 @@
 import makeFilter from './make-filter';
 import makeTask from './make-task';
 import Card from './card';
-import {COLORS, DAYS} from './constants';
+import {getCard} from './mock';
+import {rand} from './utils';
 
 /** Контейнер для фильтров */
 const filterContainer = document.querySelector(`.main__filter`);
@@ -20,28 +21,11 @@ const addFilter = (caption, amount, isChecked = false) => {
 };
 
 /**
- * Добавить элемент карточки с задачей
- * @param {Card} card карточка
+ * Добавить задачи
+ * @param {Card} card[] список карточек задач
  */
-const addTaskCard = (card) => {
-  cardsContainer.insertAdjacentHTML(`beforeend`, makeTask(card));
-};
-
-/**
- * Добавляет указанное количество копий случайно созданной карточки с задачей
- * @param {number} count число задач для добавления
- */
-const addRandomTaskCards = (count) => {
-
-  const color = COLORS[rand(0, COLORS.length - 1)];
-  const days = new Set().add(DAYS[rand(0, DAYS.length - 1)]);
-  const hashtags = [`hashtag1`, `hashtag2`];
-  const isDeadline = rand(1, 2) % 2 === 0;
-
-  for (let i = 0; i < count; i++) {
-    addTaskCard(new Card(`Card N${Card.index}`, color, days, hashtags, isDeadline));
-  }
-
+const addTasks = (cards) => {
+  cardsContainer.insertAdjacentHTML(`beforeend`, cards.reduce((acc, cur) => acc + makeTask(cur), ``));
 };
 
 /**
@@ -49,17 +33,9 @@ const addRandomTaskCards = (count) => {
  */
 const filterHandler = () => {
   cardsContainer.innerHTML = ``;
-  addRandomTaskCards(rand(1, 8));
+  const count = rand(1, 8);
+  addTasks(Array.apply(null, Array(count)).map(() => getCard()));
 };
-
-/**
- * Генератор случайного числа
- * @param {number} min минимальное значение
- * @param {number} max максимальное значение
- * @return {number} случайное число из интервала
- */
-const rand = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
-
 
 filterContainer.addEventListener(`change`, filterHandler);
 addFilter(`ALL`, 15, true);
@@ -70,4 +46,5 @@ addFilter(`Repeating`, 2);
 addFilter(`Tags`, 6);
 addFilter(`ARCHIVE`, 115);
 
-addRandomTaskCards(7);
+addTasks(Array.apply(null, Array(7)).map(() => getCard()));
+
