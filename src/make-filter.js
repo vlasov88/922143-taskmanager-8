@@ -5,7 +5,7 @@
  * @param {boolean} isChecked true если элемент выбран
  * @return {string} элемент фильтра
  */
-export default (caption, amount, isChecked) => {
+export const makeFilter = (caption, amount, isChecked) => {
   const lowerCaption = caption.toLowerCase();
   return `
   <input type="radio"

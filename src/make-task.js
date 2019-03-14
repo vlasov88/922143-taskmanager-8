@@ -1,8 +1,6 @@
 import {Color, Day} from './constants';
 import moment from 'moment';
 
-let cardIndex = 0;
-
 /**
  * Получить элемент дня для карточки задач
  * @param {string} day        день
@@ -53,21 +51,26 @@ const getTaskCardHashtagElement = (hashtag) =>
     <button type="button" class="card__hashtag-delete">delete</button>
   </span>`;
 
+const getColorsList = (card) =>
+  Object.values(Color).reduce((acc, curr) => acc + getTaskCardColorElement(curr, card.id, curr === card.color), ``);
+
+const getDaysList = (card) =>
+  Object.values(Day).reduce((acc, curr) => acc + getTaskCardDayElement(curr, card.id, card.repeatingDays.has(curr)), ``);
+
+const getHashtagList = (tags) =>
+  tags.reduce((acc, curr) => acc + getTaskCardHashtagElement(curr), ``);
+
+const checkIsRepeat = (repeatingDays) =>
+  repeatingDays.size > 0;
+
 /**
  * Получить новый элемент карточки с задачей
  * @param {Card} card карточка с задачей
  * @return {string} элемент задачи
  */
-export default (card) => {
-  const id = cardIndex++;
-  const colorsList = Object.values(Color).reduce((acc, curr) => acc + getTaskCardColorElement(curr, id, curr === card.color), ``);
-  const daysList = Object.values(Day).reduce((acc, curr) => acc + getTaskCardDayElement(curr, id, card.repeatingDays.has(curr)), ``);
-  const hashtagList = card.tags.reduce((acc, curr) => acc + getTaskCardHashtagElement(curr), ``);
-  const isRepeat = card.repeatingDays.size > 0;
-  const isDeadline = card.dueDate && card.dueDate.isBefore(moment());
-
-  return `
-  <article class="card card--${card.color}${card.isRepeat ? ` card--repeat` : ``}${isDeadline ? ` card--deadline` : ``}">
+export const makeTask = (card) =>
+`
+  <article class="card card--${card.color}${checkIsRepeat(card.repeatingDays) ? ` card--repeat` : ``}${card.dueDate && card.dueDate.isBefore(moment()) ? ` card--deadline` : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -119,18 +122,18 @@ export default (card) => {
               </fieldset>
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">${isRepeat ? `yes` : `no`}</span>
+                repeat:<span class="card__repeat-status">${checkIsRepeat(card.repeatingDays) ? `yes` : `no`}</span>
               </button>
 
-              <fieldset class="card__repeat-days"${isRepeat ? ` disabled` : ``}>
+              <fieldset class="card__repeat-days"${checkIsRepeat(card.repeatingDays) ? ` disabled` : ``}>
                 <div class="card__repeat-days-inner">
-                  ${daysList}
+                  ${getDaysList(card)}
                 </div>
               </fieldset>
             </div>
 
             <div class="card__hashtag">
-              <div class="card__hashtag-list">${hashtagList}</div>
+              <div class="card__hashtag-list">${getHashtagList(card.tags)}</div>
 
               <label>
                 <input
@@ -158,7 +161,7 @@ export default (card) => {
 
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
-            <div class="card__colors-wrap">${colorsList}</div>
+            <div class="card__colors-wrap">${getColorsList(card)}</div>
           </div>
         </div>
 
@@ -169,4 +172,4 @@ export default (card) => {
       </div>
     </form>
   </article>`;
-};
+
