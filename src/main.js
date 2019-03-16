@@ -1,6 +1,7 @@
 import { makeFilter } from './make-filter';
-import { makeTask } from './make-task';
+import Task from './task';
 import { getCard } from './mock/data';
+import TaskEdit from './task-edit';
 
 /** Контейнер для фильтров */
 const filterContainer = document.querySelector(`.main__filter`);
@@ -25,16 +26,30 @@ const generateFilters = () => [
 
 const generateTasks = (num = 8) => [...Array(num)]
   .map((value, index) => getCard(index))
-  .map(makeTask)
-  .join(``);
+  .map((card) => {
+    const task = new Task(card);
+    const editTask = new TaskEdit(card);
+    task.onEdit = () => {
+      editTask.render();
+      cardsContainer.replaceChild(editTask.element, task.element);
+      task.unrender();
+    };
+
+    editTask.onSubmit = () => {
+      task.render();
+      cardsContainer.replaceChild(task.element, editTask.element);
+      editTask.unrender();
+    }
+    cardsContainer.appendChild(task.render());
+  });
 
 /**
  * Обработчик смены фильтра
  */
 filterContainer.addEventListener(`change`, () => {
-  renderElements(cardsContainer, generateTasks());
+  generateTasks();
 });
 
 renderElements(filterContainer, generateFilters());
-renderElements(cardsContainer, generateTasks());
+generateTasks();
 

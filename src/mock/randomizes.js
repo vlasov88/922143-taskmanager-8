@@ -6,7 +6,7 @@
  */
 export const getRandomInteger = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 
-export const getRandomBoolean = () => !!getRandomInteger(0, 1);
+export const getRandomBoolean = () => !getRandomInteger(0, 20);
 
 export const getRandomValue = (arr) =>
   arr[Math.floor(Math.random() * arr.length)];
