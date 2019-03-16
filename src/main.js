@@ -1,7 +1,6 @@
-import makeFilter from './make-filter';
-import makeTask from './make-task';
-import Card from './card';
-import {COLORS, DAYS} from './constants';
+import { makeFilter } from './make-filter';
+import { makeTask } from './make-task';
+import { getCard } from './mock/data';
 
 /** Контейнер для фильтров */
 const filterContainer = document.querySelector(`.main__filter`);
@@ -9,65 +8,33 @@ const filterContainer = document.querySelector(`.main__filter`);
 /** Контейнер для карточек заданий */
 const cardsContainer = document.querySelector(`.board__tasks`);
 
-/**
- * Добавить новый элемент фильтра
- * @param {string} caption    название
- * @param {number} amount     количество
- * @param {boolean} isChecked true если элемент выбран
- */
-const addFilter = (caption, amount, isChecked = false) => {
-  filterContainer.insertAdjacentHTML(`beforeend`, makeFilter(caption, amount, isChecked));
+const renderElements = (container, element) => {
+  container.innerHTML = element;
 };
 
-/**
- * Добавить элемент карточки с задачей
- * @param {Card} card карточка
- */
-const addTaskCard = (card) => {
-  cardsContainer.insertAdjacentHTML(`beforeend`, makeTask(card));
-};
+const generateFilters = () => [
+    { caption: `ALL`, amount: 15, isChecked: true },
+    { caption: `OVERDUE`, amount: 0 },
+    { caption: `TODAY`, amount: 0 },
+    { caption: `FAVORITES`, amount: 7 },
+    { caption: `Repeating`, amount: 2 },
+    { caption: `Tags`, amount: 6 },
+    { caption: `ARCHIVE`, amount: 115 }
+  ]
+  .map(({ caption, amount, isChecked }) => makeFilter(caption, amount, isChecked)).join(``);
 
-/**
- * Добавляет указанное количество копий случайно созданной карточки с задачей
- * @param {number} count число задач для добавления
- */
-const addRandomTaskCards = (count) => {
-
-  const color = COLORS[rand(0, COLORS.length - 1)];
-  const days = new Set().add(DAYS[rand(0, DAYS.length - 1)]);
-  const hashtags = [`hashtag1`, `hashtag2`];
-  const isDeadline = rand(1, 2) % 2 === 0;
-
-  for (let i = 0; i < count; i++) {
-    addTaskCard(new Card(`Card N${Card.index}`, color, days, hashtags, isDeadline));
-  }
-
-};
+const generateTasks = (num = 8) => [...Array(num)]
+  .map((value, index) => getCard(index))
+  .map(makeTask)
+  .join(``);
 
 /**
  * Обработчик смены фильтра
  */
-const filterHandler = () => {
-  cardsContainer.innerHTML = ``;
-  addRandomTaskCards(rand(1, 8));
-};
+filterContainer.addEventListener(`change`, () => {
+  renderElements(cardsContainer, generateTasks());
+});
 
-/**
- * Генератор случайного числа
- * @param {number} min минимальное значение
- * @param {number} max максимальное значение
- * @return {number} случайное число из интервала
- */
-const rand = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
+renderElements(filterContainer, generateFilters());
+renderElements(cardsContainer, generateTasks());
 
-
-filterContainer.addEventListener(`change`, filterHandler);
-addFilter(`ALL`, 15, true);
-addFilter(`OVERDUE`, 0);
-addFilter(`TODAY`, 0);
-addFilter(`FAVORITES`, 7);
-addFilter(`Repeating`, 2);
-addFilter(`Tags`, 6);
-addFilter(`ARCHIVE`, 115);
-
-addRandomTaskCards(7);

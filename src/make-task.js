@@ -1,4 +1,5 @@
-import {COLORS, DAYS} from './constants';
+import {Color, Day} from './constants';
+import moment from 'moment';
 
 /**
  * Получить элемент дня для карточки задач
@@ -50,21 +51,26 @@ const getTaskCardHashtagElement = (hashtag) =>
     <button type="button" class="card__hashtag-delete">delete</button>
   </span>`;
 
+const getColorsList = (card) =>
+  Object.values(Color).reduce((acc, curr) => acc + getTaskCardColorElement(curr, card.id, curr === card.color), ``);
+
+const getDaysList = (card) =>
+  Object.values(Day).reduce((acc, curr) => acc + getTaskCardDayElement(curr, card.id, card.repeatingDays.has(curr)), ``);
+
+const getHashtagList = (tags) =>
+  tags.reduce((acc, curr) => acc + getTaskCardHashtagElement(curr), ``);
+
+const checkIsRepeat = (repeatingDays) =>
+  repeatingDays.size > 0;
+
 /**
  * Получить новый элемент карточки с задачей
  * @param {Card} card карточка с задачей
  * @return {string} элемент задачи
  */
-export default (card) => {
-  const colorsList = COLORS.reduce((acc, curr) => acc + getTaskCardColorElement(curr, card.id, curr === card.color), ``);
-  const daysList = DAYS.reduce((acc, curr) => acc + getTaskCardDayElement(curr, card.id, card.days.has(curr)), ``);
-  const hashtagList = card.hashtags.reduce((acc, curr) => acc + getTaskCardHashtagElement(curr), ``);
-  const isRepeat = card.days.size > 0;
-  const isEdit = false; // TODO на будующее
-  // const deadline; // TODO работа с датами и временем
-
-  return `
-  <article class="card${isEdit ? `  card--edit` : ``} card--${card.color}${card.isRepeat ? ` card--repeat` : ``}${card.isDeadline ? ` card--deadline` : ``}">
+export const makeTask = (card) =>
+`
+  <article class="card card--${card.color}${checkIsRepeat(card.repeatingDays) ? ` card--repeat` : ``}${card.dueDate && card.dueDate.isBefore(moment()) ? ` card--deadline` : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -85,7 +91,7 @@ export default (card) => {
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >${card.text}</textarea>
+            >${card.title}</textarea>
           </label>
         </div>
 
@@ -116,18 +122,18 @@ export default (card) => {
               </fieldset>
 
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">${isRepeat ? `yes` : `no`}</span>
+                repeat:<span class="card__repeat-status">${checkIsRepeat(card.repeatingDays) ? `yes` : `no`}</span>
               </button>
 
-              <fieldset class="card__repeat-days"${isRepeat ? ` disabled` : ``}>
+              <fieldset class="card__repeat-days"${checkIsRepeat(card.repeatingDays) ? ` disabled` : ``}>
                 <div class="card__repeat-days-inner">
-                  ${daysList}
+                  ${getDaysList(card)}
                 </div>
               </fieldset>
             </div>
 
             <div class="card__hashtag">
-              <div class="card__hashtag-list">${hashtagList}</div>
+              <div class="card__hashtag-list">${getHashtagList(card.tags)}</div>
 
               <label>
                 <input
@@ -140,14 +146,14 @@ export default (card) => {
             </div>
           </div>
 
-          <label class="card__img-wrap card__img-wrap--empty">
+          <label class="card__img-wrap${card.picture ? `` : ` card__img-wrap--empty`}">
             <input
               type="file"
               class="card__img-input visually-hidden"
               name="img"
             />
             <img
-              src="img/add-photo.svg"
+              src="${card.picture || `img/add-photo.svg`}"
               alt="task picture"
               class="card__img"
             />
@@ -155,7 +161,7 @@ export default (card) => {
 
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
-            <div class="card__colors-wrap">${colorsList}</div>
+            <div class="card__colors-wrap">${getColorsList(card)}</div>
           </div>
         </div>
 
@@ -166,4 +172,4 @@ export default (card) => {
       </div>
     </form>
   </article>`;
-};
+
