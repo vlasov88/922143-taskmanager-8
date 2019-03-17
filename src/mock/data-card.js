@@ -30,9 +30,9 @@ export const getRandomColor = () =>
   getRandomValue(colors);
 
 export const getRandomDays = () =>
-  new Set(days.filter(() => getRandomBoolean()));
+  new Set(days.filter(() => getRandomBoolean(0.1)));
 
-export const getRandomFavorite = () => getRandomBoolean();
+export const getRandomFavorite = () => getRandomBoolean(0.1);
 
-export const getRandomDone = () => getRandomBoolean();
+export const getRandomDone = () => getRandomBoolean(0.1);
 

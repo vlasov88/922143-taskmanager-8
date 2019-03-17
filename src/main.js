@@ -22,11 +22,11 @@ const generateFilters = () => [
     { caption: `Tags`, amount: 6 },
     { caption: `ARCHIVE`, amount: 115 }
   ]
-  .map(({ caption, amount, isChecked }) => makeFilter(caption, amount, isChecked)).join(``);
+  .map(({caption, amount, isChecked}) => makeFilter(caption, amount, isChecked)).join(``);
 
 const generateTasks = (num = 8) => [...Array(num)]
-  .map((value, index) => getCard(index))
-  .map((card) => {
+  .forEach((_, index) => {
+    const card = getCard(index);
     const task = new Task(card);
     const editTask = new TaskEdit(card);
     task.onEdit = () => {
@@ -39,7 +39,7 @@ const generateTasks = (num = 8) => [...Array(num)]
       task.render();
       cardsContainer.replaceChild(task.element, editTask.element);
       editTask.unrender();
-    }
+    };
     cardsContainer.appendChild(task.render());
   });
 

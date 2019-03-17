@@ -5,7 +5,7 @@ import {createElement} from './create-element';
 export default class Task {
 
   constructor(card) {
-    this._card = card;
+    this._card = {...card};
     this._element = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
@@ -112,22 +112,22 @@ export default class Task {
 
   render() {
     this._element = createElement(this.template);
-    this._bind();
+    this._createListeners();
     return this._element;
   }
 
   unrender() {
-    this._unbind();
+    this._removeListeners();
+    this._element.remove();
     this._element = null;
   }
 
-  _bind() {
+  _createListeners() {
     this._element.querySelector(`.card__btn--edit`)
     .addEventListener(`click`, this._onEditButtonClick);
   }
 
-  _unbind() {
-    // Удаление обработчиков
+  _removeListeners() {
     this._element.querySelector(`.card__btn--edit`)
     .removeEventListener(`click`, this._onEditButtonClick);
   }
@@ -161,7 +161,7 @@ export default class Task {
    * @param {boolean} isChecked выбран ли элемент
    * @return {string} элемент дня
    */
-  static _getDayTemplate(day, id, isChecked) {
+  static _getDayTemplate(day, id, isChecked = false) {
     return `<input
         class="visually-hidden card__repeat-day-input"
         type="checkbox"
@@ -179,7 +179,7 @@ export default class Task {
    * @param {boolean} isChecked выбран ли элемент
    * @return {string} элемент цвета
    */
-  static _getColorTemplate(color, id, isChecked) {
+  static _getColorTemplate(color, id, isChecked = false) {
     return `<input
         type="radio"
         id="color-${color}-${id}"
@@ -192,17 +192,17 @@ export default class Task {
 
   /**
    * Получить элемент hashtag
-   * @param {string} hashtag текст хэштега без '#'
+   * @param {string} tag тег без '#'
    * @return {string} элемент hashtag
    */
-  static _getHashtagTemplate(hashtag) {
+  static _getHashtagTemplate(tag) {
     return `<span class="card__hashtag-inner">
         <input
         type="hidden"
         name="hashtag"
-        value="${hashtag}"
+        value="${tag}"
         class="card__hashtag-hidden-input"/>
-        <button type="button" class="card__hashtag-name">#${hashtag}</button>
+        <button type="button" class="card__hashtag-name">#${tag}</button>
         <button type="button" class="card__hashtag-delete">delete</button>
       </span>`;
   }

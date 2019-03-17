@@ -3,7 +3,7 @@ import {Color} from './constants';
 /**
  * Карточка с задачей
  * @param {string} title       заголовок карточки
- * @param {Date} dueDate       дата запланированного выполнения
+ * @param {Moment} dueDate     дата запланированного выполнения
  * @param {Set} tags           список хэштегов
  * @param {string} picture     URL до картинки
  * @param {string} color       цвет полоски
